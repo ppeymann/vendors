@@ -19,6 +19,7 @@ type (
 		ID        string    `json:"jti"`
 		Issuer    string    `json:"iss"`
 		Audience  string    `json:"aud"`
+		Roles     []string  `json:"roles"`
 		IssuedAt  time.Time `json:"issued_at"`
 		ExpiredAt time.Time `json:"exp"`
 	}

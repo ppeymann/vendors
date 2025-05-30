@@ -11,6 +11,7 @@ import (
 const (
 	ContextUserKey = "CONTEXT_USER_KEY"
 	ContextHostKey = "HOST_KEY"
+	ContextRoleKey = "CONTEXT_ROLE"
 )
 
 // ErrUserPrincipalsNotFound is returned when UserPrincipals are not found in the context.
