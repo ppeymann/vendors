@@ -112,9 +112,9 @@ func (c *Configuration) loadConfig() error {
 	path := ""
 
 	if runtime.GOOS == "windows" {
-		path = ".\\config\\config.json"
+		path = ".\\config.json"
 	} else {
-		path = "./config/config.json"
+		path = "./config.json"
 	}
 
 	file, err := os.Open(path)
