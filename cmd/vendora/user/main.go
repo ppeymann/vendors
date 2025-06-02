@@ -1,4 +1,4 @@
-package user
+package main
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ import (
 
 func main() {
 	lis, err := net.Listen("tcp", env.GetEnv("USER_PORT", ":50051"))
+
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
