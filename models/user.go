@@ -4,6 +4,9 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
+	vendora "github.com/ppeymann/vendors.git"
 	"gorm.io/gorm"
 )
 
@@ -19,17 +22,25 @@ type (
 	// UserService represents method signatures for api user endpoint.
 	// so any object that stratifying this interface can be used as user service for api endpoint.
 	UserService interface {
-		// Register(ctx *gin.Context, in *AuthInput) *vendora.BaseResult
+		// Register is for sign up new user
+		Register(ctx *gin.Context, in *AuthInput) *vendora.BaseResult
 	}
 
 	// UserRepository represents method signatures for user domain repository.
 	// so any object that stratifying this interface can be used as user domain repository.
 	UserRepository interface {
+		// Create is for create a new user
+		Create(in *AuthInput) (*UserEntity, error)
+
+		// BaseRepository (migrate, models,...)
+		vendora.BaseRepository
 	}
 
 	// UserHandler represents method signatures for user handlers.
 	// so any object that stratifying this interface can be used as user handlers.
 	UserHandler interface {
+		// Register is handler for sign up
+		Register(ctx *gin.Context)
 	}
 
 	AuthInput struct {
@@ -43,11 +54,17 @@ type (
 		// UserName
 		UserName string `json:"user_name" gorm:"column:user_name;index;unique" mapstructure:"user_name"`
 
+		// Mobile phone number of account owner
+		Mobile string `json:"mobile" gorm:"column:mobile;index;unique"`
+
+		// Suspended uses as determination flag for account suspension situation
+		Suspended bool `json:"suspended" gorm:"column:suspended;index"`
+
+		// Roles contains account access level permissions
+		Roles pq.StringArray `json:"roles" gorm:"type:varchar(64)[]"`
+
 		// Password
 		Password string `json:"-" gorm:"column:password;not null;size:100" mapstructure:"password"`
-
-		// FullName
-		Fullname string `json:"full_name" gorm:"column:full_name" mapstructure:"full_name"`
 	}
 
 	TokenBundlerOutput struct {

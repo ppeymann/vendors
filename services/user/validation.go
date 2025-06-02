@@ -1,6 +1,8 @@
 package user
 
 import (
+	"github.com/gin-gonic/gin"
+	vendora "github.com/ppeymann/vendors.git"
 	"github.com/ppeymann/vendors.git/models"
 	validations "github.com/ppeymann/vendors.git/validation"
 )
@@ -23,4 +25,13 @@ func NewValidationService(srv models.UserService, path string) (models.UserServi
 		next:   srv,
 		schema: schema,
 	}, nil
+}
+
+func (v *validationService) Register(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
+	err := validations.Validate(in, v.schema)
+	if err != nil {
+		return err
+	}
+
+	return v.next.Register(ctx, in)
 }
