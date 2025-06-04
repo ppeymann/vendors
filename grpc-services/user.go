@@ -3,7 +3,6 @@ package grpcservices
 import (
 	"context"
 
-	"github.com/mitchellh/mapstructure"
 	"github.com/ppeymann/vendors.git/models"
 	userpb "github.com/ppeymann/vendors.git/proto/user"
 )
@@ -20,10 +19,22 @@ func NewUserService(repo models.UserRepository) userpb.UserServiceServer {
 }
 
 func (s *userService) Create(ctx context.Context, req *userpb.CreateRequest) (*userpb.CreateResponse, error) {
-	in := &models.AuthInput{}
+	in := &models.AuthInput{
+		UserName: req.GetUserName(),
+		Password: req.GetPassword(),
+	}
 
-	_ = mapstructure.Decode(req, in)
+	user, err := s.repo.Create(in)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
-
+	return &userpb.CreateResponse{
+		Id:        uint64(user.ID),
+		UserName:  user.UserName,
+		Password:  user.Password,
+		Mobile:    user.Mobile,
+		Suspended: user.Suspended,
+		Roles:     user.Roles,
+	}, nil
 }

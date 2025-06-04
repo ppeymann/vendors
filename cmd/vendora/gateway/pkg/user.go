@@ -18,7 +18,7 @@ import (
 )
 
 func InitUserService(logger kitLog.Logger, conf *config.Configuration, server *server.Server) models.UserService {
-	connString := fmt.Sprintf("%s:%s", env.GetEnv("GRPC_ADRR", "localhost"), env.GetEnv("USER_PORT", "50051"))
+	connString := fmt.Sprintf("%s%s", env.GetEnv("GRPC_ADRR", "localhost"), env.GetEnv("USER_PORT", "50051"))
 
 	// connection to gRPC Server
 	conn, err := grpc.NewClient(connString, grpc.WithTransportCredentials(insecure.NewCredentials()))

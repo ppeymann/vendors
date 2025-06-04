@@ -24,7 +24,7 @@ const (
 
 type CreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserName      string                 `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	UserName      string                 `protobuf:"bytes,1,opt,name=user_name,proto3" json:"user_name,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -82,6 +82,9 @@ type CreateResponse struct {
 	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`
 	UserName      string                 `protobuf:"bytes,5,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
 	Password      string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	Mobile        string                 `protobuf:"bytes,7,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Suspended     bool                   `protobuf:"varint,8,opt,name=suspended,proto3" json:"suspended,omitempty"`
+	Roles         []string               `protobuf:"bytes,9,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -158,14 +161,35 @@ func (x *CreateResponse) GetPassword() string {
 	return ""
 }
 
+func (x *CreateResponse) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *CreateResponse) GetSuspended() bool {
+	if x != nil {
+		return x.Suspended
+	}
+	return false
+}
+
+func (x *CreateResponse) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
 var File_proto_user_user_proto protoreflect.FileDescriptor
 
 const file_proto_user_user_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/user/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"H\n" +
-	"\rCreateRequest\x12\x1b\n" +
-	"\tuser_name\x18\x01 \x01(\tR\buserName\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x9e\x02\n" +
+	"\x15proto/user/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"I\n" +
+	"\rCreateRequest\x12\x1c\n" +
+	"\tuser_name\x18\x01 \x01(\tR\tuser_name\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"\xea\x02\n" +
 	"\x0eCreateResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x129\n" +
 	"\n" +
@@ -175,7 +199,10 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\n" +
 	"deleted_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\tdeletedAt\x88\x01\x01\x12\x1b\n" +
 	"\tuser_name\x18\x05 \x01(\tR\buserName\x12\x1a\n" +
-	"\bpassword\x18\x06 \x01(\tR\bpasswordB\r\n" +
+	"\bpassword\x18\x06 \x01(\tR\bpassword\x12\x16\n" +
+	"\x06mobile\x18\a \x01(\tR\x06mobile\x12\x1c\n" +
+	"\tsuspended\x18\b \x01(\bR\tsuspended\x12\x14\n" +
+	"\x05roles\x18\t \x03(\tR\x05rolesB\r\n" +
 	"\v_deleted_at2B\n" +
 	"\vUserService\x123\n" +
 	"\x06Create\x12\x13.user.CreateRequest\x1a\x14.user.CreateResponseB\x12Z\x10grpc/user;userpbb\x06proto3"

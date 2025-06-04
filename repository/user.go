@@ -27,6 +27,7 @@ func (r *userRepo) Create(in *models.AuthInput) (*models.UserEntity, error) {
 		Model:    gorm.Model{},
 		UserName: in.UserName,
 		Password: in.Password,
+		Roles:    []string{"USER"},
 	}
 
 	// create Account
