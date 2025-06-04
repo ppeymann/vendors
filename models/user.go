@@ -32,6 +32,9 @@ type (
 		// Create is for create a new user
 		Create(in *AuthInput) (*UserEntity, error)
 
+		// Update is for updating user information
+		Update(user *UserEntity) error
+
 		// BaseRepository (migrate, models,...)
 		vendora.BaseRepository
 	}
@@ -65,6 +68,9 @@ type (
 
 		// Password
 		Password string `json:"-" gorm:"column:password;not null;size:100" mapstructure:"password"`
+
+		// Tokens list of current user active session
+		Tokens []RefreshTokenEntity `json:"-" gorm:"foreignKey:AccountID;references:ID"`
 	}
 
 	TokenBundlerOutput struct {

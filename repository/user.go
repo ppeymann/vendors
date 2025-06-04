@@ -50,6 +50,10 @@ func (r *userRepo) Create(in *models.AuthInput) (*models.UserEntity, error) {
 	return user, nil
 }
 
+func (r *userRepo) Update(user *models.UserEntity) error {
+	return r.pg.Save(user).Error
+}
+
 func (r *userRepo) Migrate() error {
 	err := r.pg.AutoMigrate(&models.RefreshTokenEntity{})
 	if err != nil {
