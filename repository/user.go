@@ -3,7 +3,7 @@ package repository
 import (
 	"strings"
 
-	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ppeymann/vendors.git/models"
 	"gorm.io/gorm"
 )

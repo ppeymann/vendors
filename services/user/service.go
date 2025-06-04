@@ -1,36 +1,71 @@
 package user
 
 import (
+	"net/http"
+
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	vendora "github.com/ppeymann/vendors.git"
+	"github.com/ppeymann/vendors.git/auth"
 	"github.com/ppeymann/vendors.git/config"
+	"github.com/ppeymann/vendors.git/env"
 	"github.com/ppeymann/vendors.git/models"
-	userpb "github.com/ppeymann/vendors.git/proto/user"
+
+	"github.com/ppeymann/vendors.git/utils"
 )
 
 type service struct {
-	client userpb.UserServiceClient
-	conf   *config.Configuration
+	repo models.UserRepository
+	conf *config.Configuration
 }
 
-func NewService(client userpb.UserServiceClient, conf *config.Configuration) models.UserService {
+func NewService(repo models.UserRepository, conf *config.Configuration) models.UserService {
 	return &service{
-		client: client,
-		conf:   conf,
+		repo: repo,
+		conf: conf,
 	}
 }
 
-// TODO: Add this method
 func (s *service) Register(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
-	req := &userpb.CreateRequest{
-		UserName: in.UserName,
-		Password: in.Password,
+	if env.IsProduction() {
+		pass, err := utils.HashString(in.Password)
+		if err != nil {
+			return &vendora.BaseResult{
+				Errors: []string{err.Error()},
+				Status: http.StatusOK,
+			}
+		}
+
+		in.Password = pass
 	}
 
-	_, err := s.client.Create(ctx, req)
+	user, err := s.repo.Create(in)
 	if err != nil {
-		return nil
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
 	}
 
+	if s.conf.Listener.AuthMode == config.Session {
+		session := sessions.Default(ctx)
+		session.Set(vendora.UserSessionKey, auth.Claims{
+			Subject: uint(user.ID),
+			Roles:   user.Roles,
+		})
+
+		err = session.Save()
+		if err != nil {
+			return &vendora.BaseResult{
+				Status: http.StatusOK,
+				Errors: []string{vendora.ErrInternalServer.Error()},
+			}
+		}
+
+		return &vendora.BaseResult{
+			Status: http.StatusOK,
+			Result: "you are Logged In Success",
+		}
+	}
 	return nil
 }

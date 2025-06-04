@@ -1,39 +1,27 @@
 package pkg
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/go-kit/kit/metrics/prometheus"
 	kitLog "github.com/go-kit/log"
 	"github.com/ppeymann/vendors.git/config"
-	"github.com/ppeymann/vendors.git/env"
 	"github.com/ppeymann/vendors.git/models"
-	userpb "github.com/ppeymann/vendors.git/proto/user"
+	"github.com/ppeymann/vendors.git/repository"
 	"github.com/ppeymann/vendors.git/server"
 	"github.com/ppeymann/vendors.git/services/user"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"gorm.io/gorm"
 )
 
-func InitUserService(logger kitLog.Logger, conf *config.Configuration, server *server.Server) models.UserService {
-	connString := fmt.Sprintf("%s%s", env.GetEnv("GRPC_ADRR", "localhost"), env.GetEnv("USER_PORT", "50051"))
-
-	// connection to gRPC Server
-	conn, err := grpc.NewClient(connString, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatal("cannot connect to user-service gRPC: ", err)
-	}
-
-	grpcClient := userpb.NewUserServiceClient(conn)
-
+func InitUserService(db *gorm.DB, logger kitLog.Logger, conf *config.Configuration, server *server.Server) models.UserService {
+	repo := repository.NewUserRepo(db, "user")
 	// userService create service
-	userService := user.NewService(grpcClient, conf)
+	userService := user.NewService(repo, conf)
 
 	// getting path
 	path := getSchemaPath("user")
-	userService, err = user.NewValidationService(userService, path)
+	userService, err := user.NewValidationService(userService, path)
 	if err != nil {
 		log.Fatal(err)
 	}

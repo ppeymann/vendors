@@ -11,6 +11,8 @@ import (
 	"github.com/ppeymann/vendors.git/config"
 	"github.com/ppeymann/vendors.git/env"
 	"github.com/ppeymann/vendors.git/server"
+	pg "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -23,6 +25,13 @@ func main() {
 	fmt.Println("date:", base, "start:", start, "end:", end)
 
 	config, err := config.NewConfiguration(env.GetEnv("SESSION", "session_secret_string__configs"))
+	if err != nil {
+		log.Fatal(err)
+
+		return
+	}
+
+	db, err := gorm.Open(pg.Open(env.GetEnv("DSN", "")), &gorm.Config{SkipDefaultTransaction: true})
 	if err != nil {
 		log.Fatal(err)
 
@@ -42,7 +51,7 @@ func main() {
 
 	// -----------   Initializing Service ----------- //
 
-	pkg.InitUserService(sl, config, svr)
+	pkg.InitUserService(db, sl, config, svr)
 
 	// -----------   Initializing Service ----------- //
 

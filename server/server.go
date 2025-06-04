@@ -70,15 +70,15 @@ func NewService(logger kitlog.Logger, conf *config.Configuration) *Server {
 
 	svr.Router.GET("/metrics", svr.prometheus())
 
-	if conf.Listener.AuthMode == config.Paseto {
+	if conf.Listener.AuthMode == config.Session {
 		err = svr.initSession()
 		if err != nil {
 			log.Fatalln(err)
-		} else {
-			svr.paseto, err = auth.NewPasetoMaker(env.GetEnv("JWT", ""))
-			if err != nil {
-				log.Fatal(err)
-			}
+		}
+	} else {
+		svr.paseto, err = auth.NewPasetoMaker(env.GetEnv("JWT", ""))
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 
