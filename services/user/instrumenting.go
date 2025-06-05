@@ -31,3 +31,13 @@ func (i *instrumentingService) Register(ctx *gin.Context, in *models.AuthInput) 
 
 	return i.next.Register(ctx, in)
 }
+
+// Login implements models.UserService.
+func (i *instrumentingService) Login(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCount.With("method", "Login").Add(1)
+		i.requestLatency.With("method", "Login").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.Login(ctx, in)
+}

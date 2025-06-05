@@ -54,6 +54,17 @@ func (r *userRepo) Update(user *models.UserEntity) error {
 	return r.pg.Save(user).Error
 }
 
+// FindByUserName is repository for find a user with username
+func (r *userRepo) FindByUserName(username string) (*models.UserEntity, error) {
+	user := &models.UserEntity{}
+
+	if err := r.Model().Where("user_name = ?", username).First(user).Error; err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (r *userRepo) Migrate() error {
 	err := r.pg.AutoMigrate(&models.RefreshTokenEntity{})
 	if err != nil {

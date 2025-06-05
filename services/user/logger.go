@@ -36,3 +36,19 @@ func (l *loggerService) Register(ctx *gin.Context, in *models.AuthInput) (result
 
 	return l.next.Register(ctx, in)
 }
+
+// Login implements models.UserService.
+func (l *loggerService) Login(ctx *gin.Context, in *models.AuthInput) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "Login",
+			"errors", strings.Join(result.Errors, ","),
+			"user_name", in.UserName,
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.Login(ctx, in)
+}

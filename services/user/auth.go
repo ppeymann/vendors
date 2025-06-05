@@ -20,3 +20,8 @@ func NewAuthService(srv models.UserService) models.UserService {
 func (a *authService) Register(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
 	return a.next.Register(ctx, in)
 }
+
+// Login implements models.UserService.
+func (a *authService) Login(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
+	return a.next.Login(ctx, in)
+}

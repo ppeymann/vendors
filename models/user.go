@@ -24,6 +24,9 @@ type (
 	UserService interface {
 		// Register is for sign up new user
 		Register(ctx *gin.Context, in *AuthInput) *vendora.BaseResult
+
+		// Login method is for log in site
+		Login(ctx *gin.Context, in *AuthInput) *vendora.BaseResult
 	}
 
 	// UserRepository represents method signatures for user domain repository.
@@ -35,6 +38,9 @@ type (
 		// Update is for updating user information
 		Update(user *UserEntity) error
 
+		// FindByUserName
+		FindByUserName(username string) (*UserEntity, error)
+
 		// BaseRepository (migrate, models,...)
 		vendora.BaseRepository
 	}
@@ -44,6 +50,9 @@ type (
 	UserHandler interface {
 		// Register is handler for sign up
 		Register(ctx *gin.Context)
+
+		// Login is handler for log in
+		Login(ctx *gin.Context)
 	}
 
 	AuthInput struct {

@@ -1,4 +1,86 @@
+definitions:
+  models.AuthInput:
+    properties:
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
+  models.TokenBundlerOutput:
+    properties:
+      expire:
+        description: Expire is time for expire token
+        type: string
+      refresh:
+        description: Refresh is string that for refresh old token
+        type: string
+      token:
+        description: Token is string that hashed by paseto
+        type: string
+    type: object
+  vendora.BaseResult:
+    properties:
+      errors:
+        description: Errors provides list off error that occurred in processing request
+        items:
+          type: string
+        type: array
+      result:
+        description: Result single/array of any type (object/number/string/boolean)
+          that returns as response
+      result_count:
+        description: ResultCount specified number of records that returned in result_count
+          field expected result been array.
+        type: integer
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: log in with specific user name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.TokenBundlerOutput'
+              type: object
+      summary: log in
+      tags:
+      - user
+  /api/v1/user/register:
+    post:
+      consumes:
+      - application/json
+      description: Create New user
+      parameters:
+      - description: AuthInput
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.TokenBundlerOutput'
+              type: object
+      summary: Create New user
+      tags:
+      - user
 swagger: "2.0"

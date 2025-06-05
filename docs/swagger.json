@@ -3,5 +3,136 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/api/v1/user/login": {
+            "post": {
+                "description": "log in with specific user name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "log in",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.TokenBundlerOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/register": {
+            "post": {
+                "description": "Create New user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create New user",
+                "parameters": [
+                    {
+                        "description": "AuthInput",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AuthInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.TokenBundlerOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.AuthInput": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TokenBundlerOutput": {
+            "type": "object",
+            "properties": {
+                "expire": {
+                    "description": "Expire is time for expire token",
+                    "type": "string"
+                },
+                "refresh": {
+                    "description": "Refresh is string that for refresh old token",
+                    "type": "string"
+                },
+                "token": {
+                    "description": "Token is string that hashed by paseto",
+                    "type": "string"
+                }
+            }
+        },
+        "vendora.BaseResult": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "description": "Errors provides list off error that occurred in processing request",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "result": {
+                    "description": "Result single/array of any type (object/number/string/boolean) that returns as response"
+                },
+                "result_count": {
+                    "description": "ResultCount specified number of records that returned in result_count field expected result been array.",
+                    "type": "integer"
+                }
+            }
+        }
+    }
 }
