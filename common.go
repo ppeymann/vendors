@@ -96,6 +96,13 @@ type (
 	}
 )
 
+const (
+	UserRole  string = "USER"
+	AdminRole string = "ADMIN"
+)
+
+var AllRoles = []string{UserRole, AdminRole}
+
 // ToJson is method for parsing ContextUser to json string.
 func (p *ContextUser) ToJson() (string, error) {
 	js, err := json.Marshal(p)
