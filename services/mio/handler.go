@@ -36,7 +36,18 @@ func NewHandler(svc models.MioService, conf *config.Configuration, srv *server.S
 	return handler
 }
 
-// Download implements models.MioHandler.
+// Download handles downloading files request.
+//
+// @BasePath 		/api/v1/mio/download
+// @Summary			uploading file to mio service
+// @Description 	upload specified file to mio service with specified properties
+// @Tags 			mio
+// @Accept 			octet-stream
+// @Produce 		octet-stream
+// @Param			token		path		string			true 	"access token of file"
+// @Success 		200 		{object} 	vendora.BaseResult	"always returns status 200 but body contains errors"
+// @Router 			/mio/download/{token}	[get]
+// @Security		Authenticate Header
 func (h *handler) Download(ctx *gin.Context) {
 	in := &models.DownloadInput{
 		Token: ctx.Param("token"),
@@ -59,7 +70,19 @@ func (h *handler) Download(ctx *gin.Context) {
 	_, _ = ctx.Writer.Write(data)
 }
 
-// Image implements models.MioHandler.
+// Image handles get sized image request.
+//
+// @BasePath 		/api/v1/mio/image
+// @Summary			uploading file to mio service
+// @Description 	upload specified file to mio service with specified properties
+// @Tags 			mio
+// @Accept 			octet-stream
+// @Produce 		octet-stream
+// @Param			size		path		int		true	"width of requested image"
+// @Param			token		path		string	true	"access token of file"
+// @Success 		200 		{object} 	vendora.BaseResult	"always returns status 200 but body contains errors"
+// @Router 			/mio/image/{size}/{token}	[get]
+// @Security		Authenticate Header
 func (h *handler) Image(ctx *gin.Context) {
 	s, ok := ctx.Params.Get("size")
 	if !ok {
@@ -98,7 +121,23 @@ func (h *handler) Image(ctx *gin.Context) {
 	_, _ = ctx.Writer.Write(data)
 }
 
-// Upload implements models.MioHandler.
+// Upload handler uploading files request.
+//
+// @BasePath			/api/v1/mio/upload
+// @Summary				uploading file to mio service
+// @Description			uploading specified file to mio service with specified properties
+// @Tags 				mio
+// @Accept 				mpfd
+// @Produce 			json
+// @Param				file			formData	file			true	"uploading file"
+// @Param				tag				path		string			true 	"string enums" Enums(public, private, chat, profile)		"uploading file tag"
+//
+// @Param				Authenticate header string false "authentication paseto token [Required If AuthMode: paseto]"
+//
+// @Success 			200 		{object} 	vendora.BaseResult		"always returns status 200 but body contains errors"
+// @Router 				/mio/upload/{tag}	[post]
+// @Security			Authenticate Header
+// @Security			Session
 func (h *handler) Upload(ctx *gin.Context) {
 	in := &models.UploadInput{
 		Tag:  ctx.Param("tag"),

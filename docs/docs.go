@@ -95,6 +95,146 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/mio/download/{token}": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Header": []
+                    }
+                ],
+                "description": "upload specified file to mio service with specified properties",
+                "consumes": [
+                    "application/octet-stream"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "mio"
+                ],
+                "summary": "uploading file to mio service",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "access token of file",
+                        "name": "token",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/vendora.BaseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/mio/image/{size}/{token}": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Header": []
+                    }
+                ],
+                "description": "upload specified file to mio service with specified properties",
+                "consumes": [
+                    "application/octet-stream"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "mio"
+                ],
+                "summary": "uploading file to mio service",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "width of requested image",
+                        "name": "size",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "access token of file",
+                        "name": "token",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/vendora.BaseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/mio/upload/{tag}": {
+            "post": {
+                "security": [
+                    {
+                        "Authenticate Header": []
+                    },
+                    {
+                        "Session": []
+                    }
+                ],
+                "description": "uploading specified file to mio service with specified properties",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mio"
+                ],
+                "summary": "uploading file to mio service",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "uploading file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "public",
+                            "private",
+                            "chat",
+                            "profile"
+                        ],
+                        "type": "string",
+                        "description": "string enums",
+                        "name": "tag",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "authentication paseto token [Required If AuthMode: paseto]",
+                        "name": "Authenticate",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/vendora.BaseResult"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

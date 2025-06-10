@@ -83,4 +83,93 @@ paths:
       summary: Create New user
       tags:
       - user
+  /mio/download/{token}:
+    get:
+      consumes:
+      - application/octet-stream
+      description: upload specified file to mio service with specified properties
+      parameters:
+      - description: access token of file
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/vendora.BaseResult'
+      security:
+      - Authenticate Header: []
+      summary: uploading file to mio service
+      tags:
+      - mio
+  /mio/image/{size}/{token}:
+    get:
+      consumes:
+      - application/octet-stream
+      description: upload specified file to mio service with specified properties
+      parameters:
+      - description: width of requested image
+        in: path
+        name: size
+        required: true
+        type: integer
+      - description: access token of file
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/vendora.BaseResult'
+      security:
+      - Authenticate Header: []
+      summary: uploading file to mio service
+      tags:
+      - mio
+  /mio/upload/{tag}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: uploading specified file to mio service with specified properties
+      parameters:
+      - description: uploading file
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: string enums
+        enum:
+        - public
+        - private
+        - chat
+        - profile
+        in: path
+        name: tag
+        required: true
+        type: string
+      - description: 'authentication paseto token [Required If AuthMode: paseto]'
+        in: header
+        name: Authenticate
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/vendora.BaseResult'
+      security:
+      - Authenticate Header: []
+      - Session: []
+      summary: uploading file to mio service
+      tags:
+      - mio
 swagger: "2.0"
