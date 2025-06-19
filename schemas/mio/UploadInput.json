@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "UploadInput",
+    "$protected": false,
+    "type": "object",
+    "properties": {
+        "tag": {
+            "type": "string",
+            "enum":[
+                "public",
+                "private",
+                "chat",
+                "profile"
+            ]
+        },
+        "content_type": {
+            "type": "string",
+            "enum": [
+                "image/jpeg",
+                "audio/mpeg",
+                "image/png",
+                "application/pdf",
+                "audio/webm"
+            ]
+        },
+        "size":{
+            "type": "integer",
+            "minimum": 5000,
+            "maximum": 10240000
+        }
+    },
+    "required": [
+        "tag",
+        "size"
+    ]
+}

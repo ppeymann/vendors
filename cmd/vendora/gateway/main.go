@@ -51,7 +51,11 @@ func main() {
 
 	// -----------   Initializing Service ----------- //
 
+	// User Service
 	pkg.InitUserService(db, sl, config, svr)
+
+	// Mio Service
+	pkg.InitMioService(db, sl, config, svr)
 
 	// -----------   Initializing Service ----------- //
 

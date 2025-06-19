@@ -14,15 +14,13 @@ import (
 type (
 	authService struct {
 		opts config.StorageOptions
-		repo models.MioRepository
 		next models.MioService
 	}
 )
 
-func NewAuthService(opts config.StorageOptions, repo models.MioRepository, srv models.MioService) models.MioService {
+func NewAuthService(opts config.StorageOptions, srv models.MioService) models.MioService {
 	return &authService{
 		opts: opts,
-		repo: repo,
 		next: srv,
 	}
 }
