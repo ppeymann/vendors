@@ -45,3 +45,8 @@ func (v *validationService) Login(ctx *gin.Context, in *models.AuthInput) *vendo
 
 	return v.next.Register(ctx, in)
 }
+
+// User implements models.UserService.
+func (v *validationService) User(ctx *gin.Context) *vendora.BaseResult {
+	return v.next.User(ctx)
+}

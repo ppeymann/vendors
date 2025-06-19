@@ -41,3 +41,13 @@ func (i *instrumentingService) Login(ctx *gin.Context, in *models.AuthInput) *ve
 
 	return i.next.Login(ctx, in)
 }
+
+// User implements models.UserService.
+func (i *instrumentingService) User(ctx *gin.Context) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCount.With("method", "User").Add(1)
+		i.requestLatency.With("method", "User").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.User(ctx)
+}

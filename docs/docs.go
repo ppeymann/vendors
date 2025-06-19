@@ -15,6 +15,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/user": {
+            "get": {
+                "description": "get user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "user info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.UserEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user/login": {
             "post": {
                 "description": "log in with specific user name",
@@ -262,6 +297,30 @@ const docTemplate = `{
                 },
                 "token": {
                     "description": "Token is string that hashed by paseto",
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserEntity": {
+            "type": "object",
+            "properties": {
+                "mobile": {
+                    "description": "Mobile phone number of account owner",
+                    "type": "string"
+                },
+                "roles": {
+                    "description": "Roles contains account access level permissions",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "suspended": {
+                    "description": "Suspended uses as determination flag for account suspension situation",
+                    "type": "boolean"
+                },
+                "user_name": {
+                    "description": "UserName",
                     "type": "string"
                 }
             }

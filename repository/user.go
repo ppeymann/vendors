@@ -65,6 +65,18 @@ func (r *userRepo) FindByUserName(username string) (*models.UserEntity, error) {
 	return user, nil
 }
 
+// FindByID implements models.UserRepository.
+func (r *userRepo) FindByID(id uint) (*models.UserEntity, error) {
+	user := &models.UserEntity{}
+
+	err := r.Model().Where("id = ?", id).First(user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (r *userRepo) Migrate() error {
 	err := r.pg.AutoMigrate(&models.RefreshTokenEntity{})
 	if err != nil {

@@ -27,6 +27,9 @@ type (
 
 		// Login method is for log in site
 		Login(ctx *gin.Context, in *AuthInput) *vendora.BaseResult
+
+		// User is for get user information with specific token
+		User(ctx *gin.Context) *vendora.BaseResult
 	}
 
 	// UserRepository represents method signatures for user domain repository.
@@ -41,6 +44,9 @@ type (
 		// FindByUserName
 		FindByUserName(username string) (*UserEntity, error)
 
+		// FindByID
+		FindByID(id uint) (*UserEntity, error)
+
 		// BaseRepository (migrate, models,...)
 		vendora.BaseRepository
 	}
@@ -53,6 +59,9 @@ type (
 
 		// Login is handler for log in
 		Login(ctx *gin.Context)
+
+		// User is handler for get user information
+		User(ctx *gin.Context)
 	}
 
 	AuthInput struct {

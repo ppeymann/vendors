@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/gin-gonic/gin"
+	"github.com/ppeymann/vendors.git/auth"
+	"github.com/ppeymann/vendors.git/utils"
 	"gorm.io/gorm"
 )
 
@@ -73,6 +76,7 @@ var (
 	ErrNotFound             = errors.New("not found")
 	ErrInternalServer       = errors.New("internal server error")
 	ErrEntityAlreadyExist   = errors.New("entity with specified properties already exist")
+	ErrUnAuthorization      = errors.New("UnAuthorization Error")
 )
 
 const (
@@ -112,4 +116,15 @@ func (p *ContextUser) ToJson() (string, error) {
 // FromJson is method for parsing ContextUser from json string.
 func (p *ContextUser) FromJson(val string) error {
 	return json.Unmarshal([]byte(val), p)
+}
+
+func CheckAuth(ctx *gin.Context) (*auth.Claims, error) {
+	claims := &auth.Claims{}
+
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return nil, ErrUnAuthorization
+	}
+
+	return claims, nil
 }

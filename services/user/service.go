@@ -270,3 +270,27 @@ func (s *service) Login(ctx *gin.Context, in *models.AuthInput) *vendora.BaseRes
 		},
 	}
 }
+
+// User implements models.UserService.
+func (s *service) User(ctx *gin.Context) *vendora.BaseResult {
+	claims, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	user, err := s.repo.FindByID(claims.Subject)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return &vendora.BaseResult{
+		Status: http.StatusOK,
+		Result: user,
+	}
+}

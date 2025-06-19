@@ -18,6 +18,23 @@ definitions:
         description: Token is string that hashed by paseto
         type: string
     type: object
+  models.UserEntity:
+    properties:
+      mobile:
+        description: Mobile phone number of account owner
+        type: string
+      roles:
+        description: Roles contains account access level permissions
+        items:
+          type: string
+        type: array
+      suspended:
+        description: Suspended uses as determination flag for account suspension situation
+        type: boolean
+      user_name:
+        description: UserName
+        type: string
+    type: object
   vendora.BaseResult:
     properties:
       errors:
@@ -36,6 +53,26 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/user:
+    get:
+      consumes:
+      - application/json
+      description: get user information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.UserEntity'
+              type: object
+      summary: user info
+      tags:
+      - user
   /api/v1/user/login:
     post:
       consumes:

@@ -80,3 +80,20 @@ func (h *handler) Login(ctx *gin.Context) {
 	result := h.next.Login(ctx, in)
 	ctx.JSON(result.Status, result)
 }
+
+// User is handler for get information
+//
+// @BasePath			/api/v1/user
+// @Summary				user info
+// @Description			get user information
+// @Tags				user
+// @Accept				json
+// @Produce				json
+//
+// @Success				200	{object}	vendora.BaseResult{result=models.UserEntity}
+// @Router				/api/v1/user	[get]
+func (h *handler) User(ctx *gin.Context) {
+
+	result := h.next.User(ctx)
+	ctx.JSON(result.Status, result)
+}

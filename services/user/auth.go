@@ -1,6 +1,8 @@
 package user
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	vendora "github.com/ppeymann/vendors.git"
 	"github.com/ppeymann/vendors.git/models"
@@ -24,4 +26,17 @@ func (a *authService) Register(ctx *gin.Context, in *models.AuthInput) *vendora.
 // Login implements models.UserService.
 func (a *authService) Login(ctx *gin.Context, in *models.AuthInput) *vendora.BaseResult {
 	return a.next.Login(ctx, in)
+}
+
+// User implements models.UserService.
+func (a *authService) User(ctx *gin.Context) *vendora.BaseResult {
+	_, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return a.next.User(ctx)
 }
