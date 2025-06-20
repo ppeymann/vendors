@@ -24,6 +24,11 @@ func NewHandler(srv models.UserService, s *server.Server) models.UserHandler {
 		group.POST("/login", handler.Login)
 	}
 
+	group.Use(s.Authenticate(vendora.AllRoles))
+	{
+		group.GET("", handler.User)
+	}
+
 	return handler
 }
 
