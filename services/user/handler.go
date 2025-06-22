@@ -102,3 +102,29 @@ func (h *handler) User(ctx *gin.Context) {
 	result := h.next.User(ctx)
 	ctx.JSON(result.Status, result)
 }
+
+// EditUser is handler for editing user information like first name , ...
+//
+// @BasePath			/api/v1/user
+// @Summary				edit user
+// @Description			edit user with specific ID
+// @Tags				user
+// @Accept				json
+// @Product				json
+//
+// @Success				200	{object}	vendora.BaseResult{result=models.UserEntity}
+// @Router				/api/v1/user/EditUser
+func (h *handler) EditUser(ctx *gin.Context) {
+	in := &models.EditUserInput{}
+
+	if err := ctx.ShouldBindJSON(in); err != nil {
+		ctx.JSON(http.StatusBadRequest, vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	result := h.next.EditUser(ctx, in)
+	ctx.JSON(result.Status, result)
+}

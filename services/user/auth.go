@@ -40,3 +40,16 @@ func (a *authService) User(ctx *gin.Context) *vendora.BaseResult {
 
 	return a.next.User(ctx)
 }
+
+// EditUser implements models.UserService.
+func (a *authService) EditUser(ctx *gin.Context, in *models.EditUserInput) *vendora.BaseResult {
+	_, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return a.next.EditUser(ctx, in)
+}

@@ -294,3 +294,27 @@ func (s *service) User(ctx *gin.Context) *vendora.BaseResult {
 		Result: user,
 	}
 }
+
+// EditUser implements models.UserService.
+func (s *service) EditUser(ctx *gin.Context, in *models.EditUserInput) *vendora.BaseResult {
+	claims, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	user, err := s.repo.EditUser(claims.Subject, in)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return &vendora.BaseResult{
+		Status: http.StatusOK,
+		Result: user,
+	}
+}

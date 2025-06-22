@@ -30,6 +30,12 @@ type (
 
 		// User is for get user information with specific token
 		User(ctx *gin.Context) *vendora.BaseResult
+
+		// EditUser is for edit user entity (mobile, first name, ...)
+		EditUser(ctx *gin.Context, in *EditUserInput) *vendora.BaseResult
+
+		// GetAllUserWithRole this method is for admin to get all user with specific role
+		GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult
 	}
 
 	// UserRepository represents method signatures for user domain repository.
@@ -47,6 +53,12 @@ type (
 		// FindByID
 		FindByID(id uint) (*UserEntity, error)
 
+		// EditUser
+		EditUser(id uint, in *EditUserInput) (*UserEntity, error)
+
+		// GetAllUserWithRole
+		GetAllUserWithRole(role string) ([]UserEntity, error)
+
 		// BaseRepository (migrate, models,...)
 		vendora.BaseRepository
 	}
@@ -62,6 +74,12 @@ type (
 
 		// User is handler for get user information
 		User(ctx *gin.Context)
+
+		// EditUser
+		EditUser(ctx *gin.Context)
+
+		// GetAllUserWithRole
+		GetAllUserWithRole(ctx *gin.Context)
 	}
 
 	AuthInput struct {
@@ -89,6 +107,15 @@ type (
 
 		// Tokens list of current user active session
 		Tokens []RefreshTokenEntity `json:"-" gorm:"foreignKey:AccountID;references:ID"`
+
+		// FirstName
+		FirstName string `json:"first_name" gorm:"column:first_name" mapstructure:"first_name"`
+
+		// LastName
+		LastName string `json:"last_name" gorm:"column:last_name" mapstructure:"last_name"`
+
+		// Balance
+		Balance float64 `json:"balance" gorm:"column:balance;default:0.00"`
 	}
 
 	TokenBundlerOutput struct {
@@ -110,5 +137,12 @@ type (
 		UserAgent string `json:"user_agent" gorm:"column:user_agent"`
 		IssuedAt  int64  `json:"issued_at" bson:"issued_at" gorm:"column:issued_at"`
 		ExpiredAt int64  `json:"expired_at" bson:"expired_at" gorm:"column:expired_at"`
+	}
+
+	// EditUserInput is input for editing user entity
+	EditUserInput struct {
+		FirstName string `json:"first_name" mapstructure:"first_name"`
+		LastName  string `json:"last_name" mapstructure:"last_name"`
+		Mobile    string `json:"mobile" mapstructure:"mobile"`
 	}
 )

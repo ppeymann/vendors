@@ -7,7 +7,7 @@ import (
 	"time"
 
 	kitLog "github.com/go-kit/log"
-	"github.com/ppeymann/vendors.git/cmd/vendora/gateway/pkg"
+	"github.com/ppeymann/vendors.git/cmd/vendora/pkg"
 	"github.com/ppeymann/vendors.git/config"
 	"github.com/ppeymann/vendors.git/env"
 	"github.com/ppeymann/vendors.git/server"

@@ -67,3 +67,18 @@ func (l *loggerService) User(ctx *gin.Context) (result *vendora.BaseResult) {
 
 	return l.next.User(ctx)
 }
+
+// EditUser implements models.UserService.
+func (l *loggerService) EditUser(ctx *gin.Context, in *models.EditUserInput) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "EditUser",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.EditUser(ctx, in)
+}

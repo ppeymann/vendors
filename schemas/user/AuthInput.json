@@ -1,1 +1,18 @@
-{}
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "AuthInput",
+    "$protected": false,
+    "type": "object",
+    "properties": {
+        "user_name": {
+            "type": "string"
+        },
+        "password":{
+            "type": "string"
+        }
+    },
+    "required":[
+        "user_name",
+        "password"
+    ]
+}

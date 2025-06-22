@@ -77,6 +77,43 @@ func (r *userRepo) FindByID(id uint) (*models.UserEntity, error) {
 	return user, nil
 }
 
+// EditUser implements models.UserRepository.
+func (r *userRepo) EditUser(id uint, in *models.EditUserInput) (*models.UserEntity, error) {
+	user := &models.UserEntity{}
+
+	err := r.Model().Where("id = ?", id).First(user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	user.FirstName = in.FirstName
+	user.LastName = in.LastName
+	user.Mobile = in.Mobile
+
+	err = r.Update(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// GetAllUserWithRole implements models.UserRepository.
+func (r *userRepo) GetAllUserWithRole(role string) ([]models.UserEntity, error) {
+	var users []models.UserEntity
+
+	if strings.ToLower(role) == "all" {
+		err := r.Model().Find(users).Error
+		if err != nil {
+			return nil, err
+		}
+	} else if strings.ToLower(role) == "user" {
+		// err := r.Model().Where(query interface{}, args ...interface{})
+	}
+
+	return users, nil
+}
+
 func (r *userRepo) Migrate() error {
 	err := r.pg.AutoMigrate(&models.RefreshTokenEntity{})
 	if err != nil {

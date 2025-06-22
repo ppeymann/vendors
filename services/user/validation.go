@@ -50,3 +50,13 @@ func (v *validationService) Login(ctx *gin.Context, in *models.AuthInput) *vendo
 func (v *validationService) User(ctx *gin.Context) *vendora.BaseResult {
 	return v.next.User(ctx)
 }
+
+// EditUser implements models.UserService.
+func (v *validationService) EditUser(ctx *gin.Context, in *models.EditUserInput) *vendora.BaseResult {
+	err := validations.Validate(in, v.schema)
+	if err != nil {
+		return err
+	}
+
+	return v.next.EditUser(ctx, in)
+}

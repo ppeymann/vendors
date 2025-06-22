@@ -51,3 +51,13 @@ func (i *instrumentingService) User(ctx *gin.Context) *vendora.BaseResult {
 
 	return i.next.User(ctx)
 }
+
+// EditUser implements models.UserService.
+func (i *instrumentingService) EditUser(ctx *gin.Context, in *models.EditUserInput) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCount.With("method", "EditUser").Add(1)
+		i.requestLatency.With("method", "EditUser").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.EditUser(ctx, in)
+}
