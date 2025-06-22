@@ -27,6 +27,8 @@ func NewHandler(srv models.UserService, s *server.Server) models.UserHandler {
 	group.Use(s.Authenticate(vendora.AllRoles))
 	{
 		group.GET("", handler.User)
+		group.PATCH("", handler.EditUser)
+		group.GET("/:role", handler.GetAllUserWithRole)
 	}
 
 	return handler
@@ -126,5 +128,31 @@ func (h *handler) EditUser(ctx *gin.Context) {
 	}
 
 	result := h.next.EditUser(ctx, in)
+	ctx.JSON(result.Status, result)
+}
+
+// GetAllUserWithRole is handler for get all user for admin
+//
+// @BasePath			/api/v1/user
+// @Summary				get all user
+// @Description			get all user for admin
+// @Tags				user
+// @Accept				json
+// @Product				json
+//
+// @Success				200	{object}	vendora.BaseResult{result=[]models.UserEntity}
+// @Router				/api/v1/user/{role}	[get]
+// @Security			session
+func (h *handler) GetAllUserWithRole(ctx *gin.Context) {
+	role, err := server.GetStringPath("role", ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredParam},
+		})
+
+		return
+	}
+
+	result := h.next.GetAllUserWithRole(ctx, role)
 	ctx.JSON(result.Status, result)
 }

@@ -1,11 +1,13 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+
 	vendora "github.com/ppeymann/vendors.git"
 	"github.com/ppeymann/vendors.git/auth"
 	"github.com/ppeymann/vendors.git/config"
@@ -316,5 +318,28 @@ func (s *service) EditUser(ctx *gin.Context, in *models.EditUserInput) *vendora.
 	return &vendora.BaseResult{
 		Status: http.StatusOK,
 		Result: user,
+	}
+}
+
+// GetAllUserWithRole implements models.UserService.
+func (s *service) GetAllUserWithRole(_ *gin.Context, role string) *vendora.BaseResult {
+	users, err := s.repo.GetAllUserWithRole(role)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	if len(users) == 0 {
+		return &vendora.BaseResult{
+			Errors: []string{errors.New("EOF").Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return &vendora.BaseResult{
+		Status: http.StatusOK,
+		Result: users,
 	}
 }

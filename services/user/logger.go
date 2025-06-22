@@ -82,3 +82,19 @@ func (l *loggerService) EditUser(ctx *gin.Context, in *models.EditUserInput) (re
 
 	return l.next.EditUser(ctx, in)
 }
+
+// GetAllUserWithRole implements models.UserService.
+func (l *loggerService) GetAllUserWithRole(ctx *gin.Context, role string) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetAllUserWithRole",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"role", role,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetAllUserWithRole(ctx, role)
+}

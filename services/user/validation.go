@@ -60,3 +60,8 @@ func (v *validationService) EditUser(ctx *gin.Context, in *models.EditUserInput)
 
 	return v.next.EditUser(ctx, in)
 }
+
+// GetAllUserWithRole implements models.UserService.
+func (v *validationService) GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult {
+	return v.next.GetAllUserWithRole(ctx, role)
+}

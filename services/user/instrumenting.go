@@ -61,3 +61,13 @@ func (i *instrumentingService) EditUser(ctx *gin.Context, in *models.EditUserInp
 
 	return i.next.EditUser(ctx, in)
 }
+
+// GetAllUserWithRole implements models.UserService.
+func (i *instrumentingService) GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCount.With("method", "GetAllUserWithRole").Add(1)
+		i.requestLatency.With("method", "GetAllUserWithRole").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetAllUserWithRole(ctx, role)
+}

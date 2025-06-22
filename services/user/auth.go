@@ -53,3 +53,16 @@ func (a *authService) EditUser(ctx *gin.Context, in *models.EditUserInput) *vend
 
 	return a.next.EditUser(ctx, in)
 }
+
+// GetAllUserWithRole implements models.UserService.
+func (a *authService) GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult {
+	_, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return a.next.GetAllUserWithRole(ctx, role)
+}
