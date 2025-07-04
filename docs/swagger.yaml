@@ -20,6 +20,15 @@ definitions:
     type: object
   models.UserEntity:
     properties:
+      balance:
+        description: Balance
+        type: number
+      first_name:
+        description: FirstName
+        type: string
+      last_name:
+        description: LastName
+        type: string
       mobile:
         description: Mobile phone number of account owner
         type: string
@@ -73,6 +82,46 @@ paths:
       summary: user info
       tags:
       - user
+  /api/v1/user/{role}:
+    get:
+      consumes:
+      - application/json
+      description: get all user for admin
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/models.UserEntity'
+                  type: array
+              type: object
+      security:
+      - session: []
+      summary: get all user
+      tags:
+      - user
+  /api/v1/user/EditUser:
+    patch:
+      consumes:
+      - application/json
+      description: edit user with specific ID
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.UserEntity'
+              type: object
+      summary: edit user
+      tags:
+      - user
   /api/v1/user/login:
     post:
       consumes:
@@ -93,7 +142,7 @@ paths:
       summary: log in
       tags:
       - user
-  /api/v1/user/register:
+  /api/v1/user/signup:
     post:
       consumes:
       - application/json

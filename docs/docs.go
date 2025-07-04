@@ -50,6 +50,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/user/EditUser": {
+            "patch": {
+                "description": "edit user with specific ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "edit user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.UserEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user/login": {
             "post": {
                 "description": "log in with specific user name",
@@ -85,7 +117,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/user/register": {
+        "/api/v1/user/signup": {
             "post": {
                 "description": "Create New user",
                 "consumes": [
@@ -122,6 +154,46 @@ const docTemplate = `{
                                     "properties": {
                                         "result": {
                                             "$ref": "#/definitions/models.TokenBundlerOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{role}": {
+            "get": {
+                "security": [
+                    {
+                        "session": []
+                    }
+                ],
+                "description": "get all user for admin",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get all user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.UserEntity"
+                                            }
                                         }
                                     }
                                 }
@@ -304,6 +376,18 @@ const docTemplate = `{
         "models.UserEntity": {
             "type": "object",
             "properties": {
+                "balance": {
+                    "description": "Balance",
+                    "type": "number"
+                },
+                "first_name": {
+                    "description": "FirstName",
+                    "type": "string"
+                },
+                "last_name": {
+                    "description": "LastName",
+                    "type": "string"
+                },
                 "mobile": {
                     "description": "Mobile phone number of account owner",
                     "type": "string"

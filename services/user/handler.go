@@ -45,7 +45,7 @@ func NewHandler(srv models.UserService, s *server.Server) models.UserHandler {
 //
 // @Param						input body models.AuthInput true "AuthInput"
 // @Success 					200 {object} vendora.BaseResult{result=models.TokenBundlerOutput}
-// @Router						/api/v1/user/register	[post]
+// @Router						/api/v1/user/signup	[post]
 func (h *handler) Register(ctx *gin.Context) {
 	in := &models.AuthInput{}
 
@@ -115,7 +115,7 @@ func (h *handler) User(ctx *gin.Context) {
 // @Product				json
 //
 // @Success				200	{object}	vendora.BaseResult{result=models.UserEntity}
-// @Router				/api/v1/user/EditUser
+// @Router				/api/v1/user/EditUser	[patch]
 func (h *handler) EditUser(ctx *gin.Context) {
 	in := &models.EditUserInput{}
 

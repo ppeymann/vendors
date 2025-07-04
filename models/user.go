@@ -94,7 +94,7 @@ type (
 		UserName string `json:"user_name" gorm:"column:user_name;index;unique" mapstructure:"user_name"`
 
 		// Mobile phone number of account owner
-		Mobile string `json:"mobile" gorm:"column:mobile;index;unique"`
+		Mobile string `json:"mobile" gorm:"column:mobile;index"`
 
 		// Suspended uses as determination flag for account suspension situation
 		Suspended bool `json:"suspended" gorm:"column:suspended;index"`

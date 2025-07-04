@@ -43,7 +43,7 @@ func (v *validationService) Login(ctx *gin.Context, in *models.AuthInput) *vendo
 		return err
 	}
 
-	return v.next.Register(ctx, in)
+	return v.next.Login(ctx, in)
 }
 
 // User implements models.UserService.

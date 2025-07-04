@@ -176,7 +176,7 @@ func (s *service) Login(ctx *gin.Context, in *models.AuthInput) *vendora.BaseRes
 		}
 	}
 
-	if s.conf.Listener.AuthMode == config.Paseto {
+	if s.conf.Listener.AuthMode == config.Session {
 		session := sessions.Default(ctx)
 		session.Set(vendora.UserSessionKey, auth.Claims{
 			Subject: uint(user.ID),

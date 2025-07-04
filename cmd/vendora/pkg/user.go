@@ -16,12 +16,17 @@ import (
 
 func InitUserService(db *gorm.DB, logger kitLog.Logger, conf *config.Configuration, server *server.Server) models.UserService {
 	repo := repository.NewUserRepo(db, "user")
+	err := repo.Migrate()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// userService create service
 	userService := user.NewService(repo, conf)
 
 	// getting path
 	path := getSchemaPath("user")
-	userService, err := user.NewValidationService(userService, path)
+	userService, err = user.NewValidationService(userService, path)
 	if err != nil {
 		log.Fatal(err)
 	}

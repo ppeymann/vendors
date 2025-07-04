@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ContextUserKey = "CONTEXT_USER_KEY"
+	ContextUserKey = "CONTEXT_USER"
 	ContextHostKey = "HOST_KEY"
 	ContextRoleKey = "CONTEXT_ROLE"
 )

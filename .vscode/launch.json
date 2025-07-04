@@ -9,7 +9,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/cmd/vendora/gateway/main.go",
+      "program": "${workspaceFolder}/cmd/vendora/main.go",
       "cwd": "${workspaceFolder}"
     }
   ]
