@@ -71,3 +71,13 @@ func (i *instrumentingService) GetAllUserWithRole(ctx *gin.Context, role string)
 
 	return i.next.GetAllUserWithRole(ctx, role)
 }
+
+// ActiveDeActiveSuspended implements models.UserService.
+func (i *instrumentingService) ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCount.With("method", "ActiveDeActiveSuspended").Add(1)
+		i.requestLatency.With("method", "ActiveDeActiveSuspended").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.ActiveDeActiveSuspended(ctx)
+}

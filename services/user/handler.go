@@ -156,3 +156,11 @@ func (h *handler) GetAllUserWithRole(ctx *gin.Context) {
 	result := h.next.GetAllUserWithRole(ctx, role)
 	ctx.JSON(result.Status, result)
 }
+
+// ActiveDeActiveSuspended implements models.UserHandler.
+// TODO: get ID and send it to service...
+func (h *handler) ActiveDeActiveSuspended(ctx *gin.Context) {
+
+	result := h.next.ActiveDeActiveSuspended(ctx)
+	ctx.JSON(result.Status, result)
+}

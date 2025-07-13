@@ -34,6 +34,9 @@ type (
 		// EditUser is for edit user entity (mobile, first name, ...)
 		EditUser(ctx *gin.Context, in *EditUserInput) *vendora.BaseResult
 
+		// ActiveDeActiveSuspended
+		ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult
+
 		// GetAllUserWithRole this method is for admin to get all user with specific role
 		GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult
 	}
@@ -80,6 +83,9 @@ type (
 
 		// GetAllUserWithRole
 		GetAllUserWithRole(ctx *gin.Context)
+
+		// ActiveDeActiveSuspended
+		ActiveDeActiveSuspended(ctx *gin.Context)
 	}
 
 	AuthInput struct {

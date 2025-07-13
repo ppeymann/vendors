@@ -66,3 +66,16 @@ func (a *authService) GetAllUserWithRole(ctx *gin.Context, role string) *vendora
 
 	return a.next.GetAllUserWithRole(ctx, role)
 }
+
+// ActiveDeActiveSuspended implements models.UserService.
+func (a *authService) ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult {
+	_, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return a.ActiveDeActiveSuspended(ctx)
+}

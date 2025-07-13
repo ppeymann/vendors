@@ -65,3 +65,8 @@ func (v *validationService) EditUser(ctx *gin.Context, in *models.EditUserInput)
 func (v *validationService) GetAllUserWithRole(ctx *gin.Context, role string) *vendora.BaseResult {
 	return v.next.GetAllUserWithRole(ctx, role)
 }
+
+// ActiveDeActiveSuspended implements models.UserService.
+func (v *validationService) ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult {
+	return v.next.ActiveDeActiveSuspended(ctx)
+}

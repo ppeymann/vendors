@@ -98,3 +98,18 @@ func (l *loggerService) GetAllUserWithRole(ctx *gin.Context, role string) (resul
 
 	return l.next.GetAllUserWithRole(ctx, role)
 }
+
+// ActiveDeActiveSuspended implements models.UserService.
+func (l *loggerService) ActiveDeActiveSuspended(ctx *gin.Context) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "ActiveDeActiveSuspended",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.ActiveDeActiveSuspended(ctx)
+}

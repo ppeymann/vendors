@@ -343,3 +343,43 @@ func (s *service) GetAllUserWithRole(_ *gin.Context, role string) *vendora.BaseR
 		Result: users,
 	}
 }
+
+// ActiveDeActiveSuspended implements models.UserService.
+func (s *service) ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult {
+	claims, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	user, err := s.repo.FindByID(claims.Subject)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	user.Suspended = !user.Suspended
+	err = s.repo.Update(user)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	if user.Suspended {
+		return &vendora.BaseResult{
+			Status: http.StatusOK,
+			Result: "User Activate Successful",
+		}
+	}
+
+	return &vendora.BaseResult{
+		Status: http.StatusOK,
+		Result: "User DeActivate Successful",
+	}
+}
