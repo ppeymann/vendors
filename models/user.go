@@ -122,6 +122,9 @@ type (
 
 		// Balance
 		Balance float64 `json:"balance" gorm:"column:balance;default:0.00"`
+
+		// Products just not null for seller
+		Products []ProductEntity `json:"products" gorm:"foreignKey:UserID;references:ID"`
 	}
 
 	TokenBundlerOutput struct {
