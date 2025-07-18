@@ -1,9 +1,112 @@
 definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.ActiveStatus:
+    enum:
+    - DR
+    - SUS
+    - AC
+    type: string
+    x-enum-varnames:
+    - Draft
+    - Suspend
+    - Activate
   models.AuthInput:
     properties:
       password:
         type: string
       user_name:
+        type: string
+    type: object
+  models.ProductEntity:
+    properties:
+      active:
+        allOf:
+        - $ref: '#/definitions/models.ActiveStatus'
+        description: Active is change from Admin
+      category_id:
+        description: CategoryID
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      desc:
+        description: Description
+        type: string
+      discount_price:
+        description: DiscountPrice
+        type: integer
+      id:
+        type: integer
+      images:
+        description: Images
+        items:
+          type: string
+        type: array
+      price:
+        description: Price is total price
+        type: integer
+      rating:
+        description: Rating
+        type: integer
+      short_desc:
+        description: ShortDescription
+        type: string
+      sku:
+        description: SKU is Stock keeping unit
+        type: string
+      slug:
+        description: Slug
+        type: string
+      stock:
+        description: Stock
+        type: integer
+      tags:
+        description: Tags
+        items:
+          type: string
+        type: array
+      title:
+        description: Title
+        type: string
+      updatedAt:
+        type: string
+      user_id:
+        description: UserID
+        type: integer
+    type: object
+  models.ProductInput:
+    properties:
+      category_id:
+        type: string
+      description:
+        type: string
+      discount_price:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      price:
+        type: integer
+      short_desc:
+        type: string
+      sku:
+        type: string
+      stock:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+      title:
         type: string
     type: object
   models.TokenBundlerOutput:
@@ -32,6 +135,11 @@ definitions:
       mobile:
         description: Mobile phone number of account owner
         type: string
+      products:
+        description: Products just not null for seller
+        items:
+          $ref: '#/definitions/models.ProductEntity'
+        type: array
       roles:
         description: Roles contains account access level permissions
         items:
@@ -62,6 +170,31 @@ definitions:
 info:
   contact: {}
 paths:
+  /add:
+    post:
+      consumes:
+      - application/json
+      description: Add new production with specific User
+      parameters:
+      - description: Product Input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductInput'
+      responses:
+        "200":
+          description: always returns status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.ProductEntity'
+              type: object
+      security:
+      - session: []
+      summary: Add New Product
   /api/v1/user:
     get:
       consumes:

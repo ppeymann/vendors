@@ -15,6 +15,51 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/add": {
+            "post": {
+                "security": [
+                    {
+                        "session": []
+                    }
+                ],
+                "description": "Add new production with specific User",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Add New Product",
+                "parameters": [
+                    {
+                        "description": "Product Input",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.ProductEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user": {
             "get": {
                 "description": "get user information",
@@ -345,6 +390,31 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "models.ActiveStatus": {
+            "type": "string",
+            "enum": [
+                "DR",
+                "SUS",
+                "AC"
+            ],
+            "x-enum-varnames": [
+                "Draft",
+                "Suspend",
+                "Activate"
+            ]
+        },
         "models.AuthInput": {
             "type": "object",
             "properties": {
@@ -352,6 +422,130 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProductEntity": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "description": "Active is change from Admin",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.ActiveStatus"
+                        }
+                    ]
+                },
+                "category_id": {
+                    "description": "CategoryID",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "desc": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "discount_price": {
+                    "description": "DiscountPrice",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "description": "Images",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "price": {
+                    "description": "Price is total price",
+                    "type": "integer"
+                },
+                "rating": {
+                    "description": "Rating",
+                    "type": "integer"
+                },
+                "short_desc": {
+                    "description": "ShortDescription",
+                    "type": "string"
+                },
+                "sku": {
+                    "description": "SKU is Stock keeping unit",
+                    "type": "string"
+                },
+                "slug": {
+                    "description": "Slug",
+                    "type": "string"
+                },
+                "stock": {
+                    "description": "Stock",
+                    "type": "integer"
+                },
+                "tags": {
+                    "description": "Tags",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "title": {
+                    "description": "Title",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "UserID",
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductInput": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "discount_price": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "short_desc": {
+                    "type": "string"
+                },
+                "sku": {
+                    "type": "string"
+                },
+                "stock": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -391,6 +585,13 @@ const docTemplate = `{
                 "mobile": {
                     "description": "Mobile phone number of account owner",
                     "type": "string"
+                },
+                "products": {
+                    "description": "Products just not null for seller",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductEntity"
+                    }
                 },
                 "roles": {
                     "description": "Roles contains account access level permissions",

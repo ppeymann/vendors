@@ -8,21 +8,27 @@ import (
 )
 
 type (
+	// ActiveStatus
+	ActiveStatus string
+
 	// ProductService represents method signatures for api Product endpoint.
 	// so any object that stratifying this interface can be used as Product service for api endpoint.
 	ProductService interface {
-		Add(ctx *gin.Context, in *ProductEntity) *vendora.BaseResult
+		// Add New product
+		Add(ctx *gin.Context, in *ProductInput) *vendora.BaseResult
 	}
 
 	// ProductRepository represents method signatures for Product domain repository.
 	// so any object that stratifying this interface can be used as Product domain repository.
 	ProductRepository interface {
-		Create()
+		Create(in *ProductInput, userID uint) (*ProductEntity, error)
 	}
 
 	// ProductHandler represents method signatures for Product handlers.
 	// so any object that stratifying this interface can be used as Product handlers.
-	ProductHandler interface{}
+	ProductHandler interface {
+		Add(ctx *gin.Context)
+	}
 
 	// ProductEntity is model for product
 	//
@@ -68,5 +74,30 @@ type (
 
 		// Rating
 		Rating uint32 `json:"rating" gorm:"column:rating"`
+
+		// Active is change from Admin
+		Active ActiveStatus `json:"active" gorm:"column:active;default:false"`
 	}
+
+	// ProductInput
+	//
+	// swagger: model ProductInput
+	ProductInput struct {
+		Title            string         `json:"title"`
+		Description      string         `json:"description"`
+		ShortDescription string         `json:"short_desc"`
+		CategoryID       string         `json:"category_id"`
+		Price            int64          `json:"price"`
+		DiscountPrice    int64          `json:"discount_price"`
+		Stock            int64          `json:"stock"`
+		SKU              string         `json:"sku"`
+		Images           pq.StringArray `json:"images" gorm:"images;type:text[]"`
+		Tags             pq.StringArray `json:"tags" gorm:"tags;type:text[]"`
+	}
+)
+
+const (
+	Draft    ActiveStatus = "DR"
+	Suspend  ActiveStatus = "SUS"
+	Activate ActiveStatus = "AC"
 )

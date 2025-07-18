@@ -101,11 +101,13 @@ type (
 )
 
 const (
-	UserRole  string = "USER"
-	AdminRole string = "ADMIN"
+	UserRole   string = "USER"
+	AdminRole  string = "ADMIN"
+	SellerRole string = "SELLER"
 )
 
-var AllRoles = []string{UserRole, AdminRole}
+var AllRoles = []string{UserRole, AdminRole, SellerRole}
+var SellerRoles = []string{UserRole, SellerRole}
 
 // ToJson is method for parsing ContextUser to json string.
 func (p *ContextUser) ToJson() (string, error) {
