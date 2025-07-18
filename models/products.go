@@ -22,6 +22,9 @@ type (
 	// so any object that stratifying this interface can be used as Product domain repository.
 	ProductRepository interface {
 		Create(in *ProductInput, userID uint) (*ProductEntity, error)
+
+		// BaseRepository
+		vendora.BaseRepository
 	}
 
 	// ProductHandler represents method signatures for Product handlers.
