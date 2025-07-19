@@ -32,7 +32,7 @@ definitions:
         description: Active is change from Admin
       category_id:
         description: CategoryID
-        type: string
+        type: integer
       createdAt:
         type: string
       deletedAt:
@@ -42,7 +42,7 @@ definitions:
         type: string
       discount_price:
         description: DiscountPrice
-        type: integer
+        type: number
       id:
         type: integer
       images:
@@ -52,7 +52,7 @@ definitions:
         type: array
       price:
         description: Price is total price
-        type: integer
+        type: number
       rating:
         description: Rating
         type: integer
@@ -85,17 +85,17 @@ definitions:
   models.ProductInput:
     properties:
       category_id:
-        type: string
+        type: integer
       description:
         type: string
       discount_price:
-        type: integer
+        type: number
       images:
         items:
           type: string
         type: array
       price:
-        type: integer
+        type: number
       short_desc:
         type: string
       sku:
@@ -170,6 +170,29 @@ definitions:
 info:
   contact: {}
 paths:
+  /{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: product ID
+        in: path
+        name: input
+        required: true
+        type: string
+      responses:
+        "200":
+          description: always returns status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.ProductEntity'
+              type: object
+      summary: GetProduct with specific ID
+      tags:
+      - products
   /add:
     post:
       consumes:
@@ -195,6 +218,8 @@ paths:
       security:
       - session: []
       summary: Add New Product
+      tags:
+      - products
   /api/v1/user:
     get:
       consumes:

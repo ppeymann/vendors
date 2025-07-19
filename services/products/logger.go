@@ -15,11 +15,19 @@ type loggerService struct {
 	next   models.ProductService
 }
 
-func NewLoggerService(logger log.Logger, srv models.ProductService) models.ProductService {
-	return &loggerService{
-		logger: logger,
-		next:   srv,
-	}
+func (l *loggerService) GetProduct(ctx *gin.Context, id uint) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetProduct",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"id", id,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetProduct(ctx, id)
 }
 
 // Add implements models.ProductService.
@@ -35,4 +43,11 @@ func (l *loggerService) Add(ctx *gin.Context, in *models.ProductInput) (result *
 	}(time.Now())
 
 	return l.next.Add(ctx, in)
+}
+
+func NewLoggerService(logger log.Logger, srv models.ProductService) models.ProductService {
+	return &loggerService{
+		logger: logger,
+		next:   srv,
+	}
 }

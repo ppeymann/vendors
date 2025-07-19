@@ -13,6 +13,16 @@ type productsRepo struct {
 	table    string
 }
 
+func (r *productsRepo) FindByID(id uint) (*models.ProductEntity, error) {
+	pr := &models.ProductEntity{}
+	err := r.Model().Where("id = ?", id).First(pr).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return pr, nil
+}
+
 // Migrate implements models.ProductRepository.
 func (r *productsRepo) Migrate() error {
 	return r.pg.AutoMigrate(&models.ProductEntity{})

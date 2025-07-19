@@ -8,7 +8,7 @@ import (
 )
 
 type (
-	// ActiveStatus
+	// ActiveStatus is activate status for user
 	ActiveStatus string
 
 	// ProductService represents method signatures for api Product endpoint.
@@ -16,21 +16,32 @@ type (
 	ProductService interface {
 		// Add New product
 		Add(ctx *gin.Context, in *ProductInput) *vendora.BaseResult
+
+		// GetProduct with specific ID
+		GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult
 	}
 
 	// ProductRepository represents method signatures for Product domain repository.
 	// so any object that stratifying this interface can be used as Product domain repository.
 	ProductRepository interface {
+		// Create a new Product
 		Create(in *ProductInput, userID uint) (*ProductEntity, error)
 
-		// BaseRepository
+		// FindByID with specific ID and user ID
+		FindByID(id uint) (*ProductEntity, error)
+
+		// BaseRepository .
 		vendora.BaseRepository
 	}
 
 	// ProductHandler represents method signatures for Product handlers.
 	// so any object that stratifying this interface can be used as Product handlers.
 	ProductHandler interface {
+		// Add Handler
 		Add(ctx *gin.Context)
+
+		// GetProduct Handler
+		GetProduct(ctx *gin.Context)
 	}
 
 	// ProductEntity is model for product
@@ -55,13 +66,13 @@ type (
 		ShortDescription string `json:"short_desc" gorm:"column:short_desc"`
 
 		// CategoryID
-		CategoryID string `json:"category_id" gorm:"column:category_id"`
+		CategoryID int64 `json:"category_id" gorm:"column:category_id"`
 
 		// Price is total price
-		Price int64 `json:"price" gorm:"column:price"`
+		Price float64 `json:"price" gorm:"column:price"`
 
 		// DiscountPrice
-		DiscountPrice int64 `json:"discount_price" gorm:"column:discount_price"`
+		DiscountPrice float64 `json:"discount_price" gorm:"column:discount_price"`
 
 		// Stock
 		Stock int64 `json:"stock" gorm:"column:stock"`
@@ -89,9 +100,9 @@ type (
 		Title            string         `json:"title"`
 		Description      string         `json:"description"`
 		ShortDescription string         `json:"short_desc"`
-		CategoryID       string         `json:"category_id"`
-		Price            int64          `json:"price"`
-		DiscountPrice    int64          `json:"discount_price"`
+		CategoryID       int64          `json:"category_id"`
+		Price            float64        `json:"price"`
+		DiscountPrice    float64        `json:"discount_price"`
 		Stock            int64          `json:"stock"`
 		SKU              string         `json:"sku"`
 		Images           pq.StringArray `json:"images" gorm:"images;type:text[]"`

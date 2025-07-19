@@ -12,9 +12,18 @@ type service struct {
 	repo models.ProductRepository
 }
 
-func NewService(repo models.ProductRepository) models.ProductService {
-	return &service{
-		repo: repo,
+func (s *service) GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	pr, err := s.repo.FindByID(id)
+	if err != nil {
+		return &vendora.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &vendora.BaseResult{
+		Status: http.StatusOK,
+		Result: pr,
 	}
 }
 
@@ -33,5 +42,11 @@ func (s *service) Add(ctx *gin.Context, in *models.ProductInput) *vendora.BaseRe
 	return &vendora.BaseResult{
 		Status: http.StatusOK,
 		Result: pr,
+	}
+}
+
+func NewService(repo models.ProductRepository) models.ProductService {
+	return &service{
+		repo: repo,
 	}
 }

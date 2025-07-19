@@ -57,6 +57,9 @@ func main() {
 	// Mio Service
 	pkg.InitMioService(db, sl, config, svr)
 
+	// Products Service
+	pkg.InitProducts(db, sl, config, svr)
+
 	// -----------   Initializing Service ----------- //
 
 	// listen and serve...

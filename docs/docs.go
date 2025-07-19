@@ -26,6 +26,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "products"
+                ],
                 "summary": "Add New Product",
                 "parameters": [
                     {
@@ -387,6 +390,46 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "GetProduct with specific ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product ID",
+                        "name": "input",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.ProductEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -439,7 +482,7 @@ const docTemplate = `{
                 },
                 "category_id": {
                     "description": "CategoryID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "createdAt": {
                     "type": "string"
@@ -453,7 +496,7 @@ const docTemplate = `{
                 },
                 "discount_price": {
                     "description": "DiscountPrice",
-                    "type": "integer"
+                    "type": "number"
                 },
                 "id": {
                     "type": "integer"
@@ -467,7 +510,7 @@ const docTemplate = `{
                 },
                 "price": {
                     "description": "Price is total price",
-                    "type": "integer"
+                    "type": "number"
                 },
                 "rating": {
                     "description": "Rating",
@@ -513,13 +556,13 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "category_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "description": {
                     "type": "string"
                 },
                 "discount_price": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "images": {
                     "type": "array",
@@ -528,7 +571,7 @@ const docTemplate = `{
                     }
                 },
                 "price": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "short_desc": {
                     "type": "string"

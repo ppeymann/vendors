@@ -13,21 +13,30 @@ type handler struct {
 	next models.ProductService
 }
 
-func NewHandler(srv models.ProductService, s *server.Server) models.ProductHandler {
-	handler := &handler{
-		next: srv,
+// GetProduct is handler for get product
+//
+// @BasePath			/api/v1/products
+// @Summary				GetProduct with specific ID
+// @Tags				products
+// @Accept				json
+// @Product				json
+//
+// @Param				input	path	string	true	"product ID"
+// @Success				200		{object}	vendora.BaseResult{result=models.ProductEntity}		"always returns status 200 but body contains error"
+// @Router				/{id}	[get]
+func (h *handler) GetProduct(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredParam},
+		})
+
+		return
 	}
 
-	group := s.Router.Group("/api/v1/product")
-	{
+	result := h.next.GetProduct(ctx, uint(id))
+	ctx.JSON(http.StatusOK, result)
 
-	}
-	group.Use(s.Authenticate(vendora.SellerRoles))
-	{
-		group.POST("/add", handler.Add)
-	}
-
-	return handler
 }
 
 // Add New Product
@@ -35,6 +44,7 @@ func NewHandler(srv models.ProductService, s *server.Server) models.ProductHandl
 // @BasePath			/api/v1/product
 // @Summary				Add New Product
 // @Description			Add new production with specific User
+// @Tags				products
 // @Accept				json
 // @Product				json
 //
@@ -55,4 +65,21 @@ func (h *handler) Add(ctx *gin.Context) {
 
 	result := h.next.Add(ctx, in)
 	ctx.JSON(result.Status, result)
+}
+
+func NewHandler(srv models.ProductService, s *server.Server) models.ProductHandler {
+	handler := &handler{
+		next: srv,
+	}
+
+	group := s.Router.Group("/api/v1/product")
+	{
+
+	}
+	group.Use(s.Authenticate(vendora.SellerRoles))
+	{
+		group.POST("/add", handler.Add)
+	}
+
+	return handler
 }

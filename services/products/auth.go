@@ -13,10 +13,8 @@ type authService struct {
 	next models.ProductService
 }
 
-func NewAuthService(srv models.ProductService) models.ProductService {
-	return &authService{
-		next: srv,
-	}
+func (a *authService) GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	return a.next.GetProduct(ctx, id)
 }
 
 // Add implements models.ProductService.
@@ -37,4 +35,10 @@ func (a *authService) Add(ctx *gin.Context, in *models.ProductInput) *vendora.Ba
 	}
 
 	return a.next.Add(ctx, in)
+}
+
+func NewAuthService(srv models.ProductService) models.ProductService {
+	return &authService{
+		next: srv,
+	}
 }

@@ -12,6 +12,20 @@ type validationService struct {
 	next   models.ProductService
 }
 
+func (v *validationService) GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	return v.next.GetProduct(ctx, id)
+}
+
+// Add implements models.ProductService.
+func (v *validationService) Add(ctx *gin.Context, in *models.ProductInput) *vendora.BaseResult {
+	err := validations.Validate(in, v.schema)
+	if err != nil {
+		return err
+	}
+
+	return v.next.Add(ctx, in)
+}
+
 func NewValidationsService(path string, srv models.ProductService) (models.ProductService, error) {
 	schemas := make(map[string][]byte)
 
@@ -24,14 +38,4 @@ func NewValidationsService(path string, srv models.ProductService) (models.Produ
 		schema: schemas,
 		next:   srv,
 	}, nil
-}
-
-// Add implements models.ProductService.
-func (v *validationService) Add(ctx *gin.Context, in *models.ProductInput) *vendora.BaseResult {
-	err := validations.Validate(in, v.schema)
-	if err != nil {
-		return err
-	}
-
-	return v.next.Add(ctx, in)
 }

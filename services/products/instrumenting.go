@@ -15,12 +15,13 @@ type instrumentingService struct {
 	next           models.ProductService
 }
 
-func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram, srv models.ProductService) models.ProductService {
-	return &instrumentingService{
-		requestCounter: counter,
-		requestLatency: latency,
-		next:           srv,
-	}
+func (i *instrumentingService) GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetProduct").Add(1)
+		i.requestLatency.With("method", "GetProduct").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetProduct(ctx, id)
 }
 
 // Add implements models.ProductService.
@@ -31,4 +32,12 @@ func (i *instrumentingService) Add(ctx *gin.Context, in *models.ProductInput) *v
 	}(time.Now())
 
 	return i.next.Add(ctx, in)
+}
+
+func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram, srv models.ProductService) models.ProductService {
+	return &instrumentingService{
+		requestCounter: counter,
+		requestLatency: latency,
+		next:           srv,
+	}
 }

@@ -51,7 +51,7 @@ func InitUserService(db *gorm.DB, logger kitLog.Logger, conf *config.Configurati
 		userService,
 	)
 
-	// @Injection
+	// @Injection Authorization service to chain
 	userService = user.NewAuthService(userService)
 
 	_ = user.NewHandler(userService, server)
