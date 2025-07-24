@@ -12,6 +12,10 @@ type validationService struct {
 	next   models.ProductService
 }
 
+func (v *validationService) DeleteProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	return v.next.DeleteProduct(ctx, id)
+}
+
 func (v *validationService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) *vendora.BaseResult {
 	err := validations.Validate(in, v.schema)
 	if err != nil {

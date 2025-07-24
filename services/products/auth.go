@@ -13,6 +13,25 @@ type authService struct {
 	next models.ProductService
 }
 
+func (a *authService) DeleteProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	claims, err := vendora.CheckAuth(ctx)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{vendora.ErrUnAuthorization.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	if !funk.Contains(claims.Roles, vendora.SellerRole) {
+		return &vendora.BaseResult{
+			Errors: []string{"permission denied"},
+			Status: http.StatusOK,
+		}
+	}
+
+	return a.next.DeleteProduct(ctx, id)
+}
+
 func (a *authService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) *vendora.BaseResult {
 	claims, err := vendora.CheckAuth(ctx)
 	if err != nil {

@@ -15,6 +15,21 @@ type loggerService struct {
 	next   models.ProductService
 }
 
+func (l *loggerService) DeleteProduct(ctx *gin.Context, id uint) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "DeleteProduct",
+			"errors", strings.Join(result.Errors, ", "),
+			"result", result,
+			"id", id,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.DeleteProduct(ctx, id)
+}
+
 func (l *loggerService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) (result *vendora.BaseResult) {
 	defer func(begin time.Time) {
 		_ = l.logger.Log(

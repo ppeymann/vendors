@@ -25,6 +25,9 @@ type (
 
 		// EditProduct is service for edit a product with specific ID
 		EditProduct(ctx *gin.Context, id uint, in *ProductInput) *vendora.BaseResult
+
+		// DeleteProduct with specific ID
+		DeleteProduct(ctx *gin.Context, id uint) *vendora.BaseResult
 	}
 
 	// ProductRepository represents method signatures for Product domain repository.
@@ -45,6 +48,9 @@ type (
 		// Update product
 		Update(pr *ProductEntity) error
 
+		// DeleteProduct with specific
+		DeleteProduct(id, userID uint) error
+
 		// BaseRepository .
 		vendora.BaseRepository
 	}
@@ -63,6 +69,9 @@ type (
 
 		// EditProduct handler
 		EditProduct(ctx *gin.Context)
+
+		// DeleteProduct .
+		DeleteProduct(ctx *gin.Context)
 	}
 
 	// ProductEntity is model for product

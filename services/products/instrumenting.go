@@ -15,6 +15,15 @@ type instrumentingService struct {
 	next           models.ProductService
 }
 
+func (i *instrumentingService) DeleteProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "DeleteProduct").Add(1)
+		i.requestLatency.With("method", "DeleteProduct").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.DeleteProduct(ctx, id)
+}
+
 func (i *instrumentingService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) *vendora.BaseResult {
 	defer func(begin time.Time) {
 		i.requestCounter.With("method", "EditProduct").Add(1)

@@ -13,9 +13,36 @@ type handler struct {
 	next models.ProductService
 }
 
-// EditProduct handler http request.
+// DeleteProduct handler request
 //
 // @BasePath			/api/v1/product
+// @Summary				delete a product
+// @Description			delete a product with specific ID
+// @Tags				products
+// @Accept				json
+// @Produce				json
+//
+// @Param				id		path	string		true		"product ID"
+// @Success				200		{object}	vendora.BaseResult{result=uint}		"always return status 200 but body contains error"
+// @Router				/{id}	[delete]
+// @Security			session
+func (h *handler) DeleteProduct(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredParam},
+		})
+
+		return
+	}
+
+	result := h.next.DeleteProduct(ctx, uint(id))
+	ctx.JSON(result.Status, result)
+}
+
+// EditProduct handler http request.
+//
+// @BasePath			/api/v1/products
 // @Summary				edit a product
 // @Description			edit a product with specific ID
 // @Tags				products
@@ -103,7 +130,7 @@ func (h *handler) GetProduct(ctx *gin.Context) {
 
 // Add New Product
 //
-// @BasePath			/api/v1/product
+// @BasePath			/api/v1/products
 // @Summary				Add New Product
 // @Description			Add new production with specific User
 // @Tags				products

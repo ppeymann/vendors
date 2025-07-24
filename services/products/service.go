@@ -12,6 +12,22 @@ type service struct {
 	repo models.ProductRepository
 }
 
+func (s *service) DeleteProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
+	claims, _ := vendora.CheckAuth(ctx)
+	err := s.repo.DeleteProduct(id, claims.Subject)
+	if err != nil {
+		return &vendora.BaseResult{
+			Errors: []string{err.Error()},
+			Status: http.StatusOK,
+		}
+	}
+
+	return &vendora.BaseResult{
+		Result: id,
+		Status: http.StatusOK,
+	}
+}
+
 func (s *service) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) *vendora.BaseResult {
 	claims, _ := vendora.CheckAuth(ctx)
 	pr, err := s.repo.UpdateProduct(in, id, claims.Subject)

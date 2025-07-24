@@ -12,10 +12,33 @@ type productsRepo struct {
 	table    string
 }
 
+func (r *productsRepo) DeleteProduct(id, userID uint) error {
+	// find product
+	pr, err := r.FindByID(id)
+	if err != nil {
+		return err
+	}
+
+	// check user id is correct or not
+	if pr.UserID != userID {
+		return errors.New("permission denied")
+	}
+
+	// Delete it
+	err = r.Model().Where("id = ?", id).Delete(pr).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Update Product
 func (r *productsRepo) Update(pr *models.ProductEntity) error {
 	return r.Model().Save(pr).Error
 }
 
+// UpdateProduct with product input
 func (r *productsRepo) UpdateProduct(in *models.ProductInput, id, userID uint) (*models.ProductEntity, error) {
 	pr, err := r.FindByID(id)
 	if err != nil {
@@ -45,6 +68,7 @@ func (r *productsRepo) UpdateProduct(in *models.ProductInput, id, userID uint) (
 	return pr, nil
 }
 
+// FindByTags all product
 func (r *productsRepo) FindByTags(tag []string) ([]*models.ProductEntity, error) {
 	var products []*models.ProductEntity
 
@@ -55,6 +79,7 @@ func (r *productsRepo) FindByTags(tag []string) ([]*models.ProductEntity, error)
 	return products, nil
 }
 
+// FindByID with specific product ID
 func (r *productsRepo) FindByID(id uint) (*models.ProductEntity, error) {
 	pr := &models.ProductEntity{}
 	err := r.Model().Where("id = ?", id).First(pr).Error
