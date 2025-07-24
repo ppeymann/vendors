@@ -13,7 +13,18 @@ type handler struct {
 	next models.ProductService
 }
 
-// TODO: write swagger
+// EditProduct handler http request.
+//
+// @BasePath			/api/v1/product
+// @Summary				edit a product
+// @Description			edit a product with specific ID
+// @Tags				products
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	models.ProductInput		true	"product input"
+// @Router				/edit/{id}	[patch]
+// @Security			session
 func (h *handler) EditProduct(ctx *gin.Context) {
 	in := &models.ProductInput{}
 
@@ -119,6 +130,7 @@ func NewHandler(srv models.ProductService, s *server.Server) models.ProductHandl
 	group.Use(s.Authenticate(vendora.SellerRoles))
 	{
 		group.POST("/add", handler.Add)
+		group.PATCH("/edit/:id", handler.EditProduct)
 	}
 
 	return handler

@@ -240,6 +240,38 @@
                 }
             }
         },
+        "/edit/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "session": []
+                    }
+                ],
+                "description": "edit a product with specific ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "edit a product",
+                "parameters": [
+                    {
+                        "description": "product input",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductInput"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/mio/download/{token}": {
             "get": {
                 "security": [

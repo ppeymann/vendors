@@ -327,6 +327,26 @@ paths:
       summary: Create New user
       tags:
       - user
+  /edit/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: edit a product with specific ID
+      parameters:
+      - description: product input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductInput'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - session: []
+      summary: edit a product
+      tags:
+      - products
   /mio/download/{token}:
     get:
       consumes:
