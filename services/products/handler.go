@@ -23,6 +23,7 @@ type handler struct {
 // @Produce				json
 //
 // @Param				input	body	models.ProductInput		true	"product input"
+// @Success				200		{object}	vendora.BaseResult{result=models.ProductEntity}		"always return status 200 but body contains error"
 // @Router				/edit/{id}	[patch]
 // @Security			session
 func (h *handler) EditProduct(ctx *gin.Context) {
@@ -49,6 +50,17 @@ func (h *handler) EditProduct(ctx *gin.Context) {
 	ctx.JSON(result.Status, result)
 }
 
+// GetByTags handler http request
+//
+// @BasePath			/api/v1/products
+// @Summary				get products with same tags
+// @Tags				products
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	 body			models.TagsInput		true		"slice of tags"
+// @Success				200		{object}		vendora.BaseResult{result=[]models.ProductEntity}		"always return status 200 but body contains error"
+// @Router				/tags	[post]
 func (h *handler) GetByTags(ctx *gin.Context) {
 	in := &models.TagsInput{}
 	if err := ctx.ShouldBindJSON(in); err != nil {
@@ -71,7 +83,7 @@ func (h *handler) GetByTags(ctx *gin.Context) {
 // @Accept				json
 // @Product				json
 //
-// @Param				input	path	string	true	"product ID"
+// @Param				id		path		string	true	"product ID"
 // @Success				200		{object}	vendora.BaseResult{result=models.ProductEntity}		"always returns status 200 but body contains error"
 // @Router				/{id}	[get]
 func (h *handler) GetProduct(ctx *gin.Context) {

@@ -280,7 +280,26 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "always return status 200 but body contains error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/models.ProductEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "/mio/download/{token}": {
@@ -423,6 +442,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/tags": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "get products with same tags",
+                "parameters": [
+                    {
+                        "description": "slice of tags",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.TagsInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always return status 200 but body contains error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vendora.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.ProductEntity"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/{id}": {
             "get": {
                 "consumes": [
@@ -436,7 +503,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "product ID",
-                        "name": "input",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -622,6 +689,17 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "models.TagsInput": {
+            "type": "object",
+            "properties": {
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

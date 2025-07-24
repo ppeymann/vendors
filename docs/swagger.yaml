@@ -109,6 +109,13 @@ definitions:
       title:
         type: string
     type: object
+  models.TagsInput:
+    properties:
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
   models.TokenBundlerOutput:
     properties:
       expire:
@@ -177,7 +184,7 @@ paths:
       parameters:
       - description: product ID
         in: path
-        name: input
+        name: id
         required: true
         type: string
       responses:
@@ -341,7 +348,16 @@ paths:
           $ref: '#/definitions/models.ProductInput'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: always return status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.ProductEntity'
+              type: object
       security:
       - session: []
       summary: edit a product
@@ -436,4 +452,32 @@ paths:
       summary: uploading file to mio service
       tags:
       - mio
+  /tags:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: slice of tags
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.TagsInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always return status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/vendora.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/models.ProductEntity'
+                  type: array
+              type: object
+      summary: get products with same tags
+      tags:
+      - products
 swagger: "2.0"

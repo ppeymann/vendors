@@ -34,7 +34,7 @@ type (
 		// EditUser is for edit user entity (mobile, first name, ...)
 		EditUser(ctx *gin.Context, in *EditUserInput) *vendora.BaseResult
 
-		// ActiveDeActiveSuspended
+		// ActiveDeActiveSuspended .
 		ActiveDeActiveSuspended(ctx *gin.Context) *vendora.BaseResult
 
 		// GetAllUserWithRole this method is for admin to get all user with specific role
