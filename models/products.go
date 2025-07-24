@@ -19,6 +19,12 @@ type (
 
 		// GetProduct with specific ID
 		GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult
+
+		// GetByTags get all products by tags
+		GetByTags(ctx *gin.Context, tags []string) *vendora.BaseResult
+
+		// EditProduct is service for edit a product with specific ID
+		EditProduct(ctx *gin.Context, id uint, in *ProductInput) *vendora.BaseResult
 	}
 
 	// ProductRepository represents method signatures for Product domain repository.
@@ -29,6 +35,15 @@ type (
 
 		// FindByID with specific ID and user ID
 		FindByID(id uint) (*ProductEntity, error)
+
+		// FindByTags is repo for find all product that have same tags
+		FindByTags(tag []string) ([]*ProductEntity, error)
+
+		// UpdateProduct product
+		UpdateProduct(in *ProductInput, id, userID uint) (*ProductEntity, error)
+
+		// Update product
+		Update(pr *ProductEntity) error
 
 		// BaseRepository .
 		vendora.BaseRepository
@@ -42,6 +57,12 @@ type (
 
 		// GetProduct Handler
 		GetProduct(ctx *gin.Context)
+
+		// GetByTags handler
+		GetByTags(ctx *gin.Context)
+
+		// EditProduct handler
+		EditProduct(ctx *gin.Context)
 	}
 
 	// ProductEntity is model for product
@@ -107,6 +128,11 @@ type (
 		SKU              string         `json:"sku"`
 		Images           pq.StringArray `json:"images" gorm:"images;type:text[]"`
 		Tags             pq.StringArray `json:"tags" gorm:"tags;type:text[]"`
+	}
+
+	// TagsInput tags input
+	TagsInput struct {
+		Tags pq.StringArray `json:"tags" gorm:"tags;type:text[]"`
 	}
 )
 

@@ -15,6 +15,37 @@ type loggerService struct {
 	next   models.ProductService
 }
 
+func (l *loggerService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "EditProduct",
+			"errors", strings.Join(result.Errors, ","),
+			"result", result,
+			"id", id,
+			"input", in,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.EditProduct(ctx, id, in)
+}
+
+func (l *loggerService) GetByTags(ctx *gin.Context, tags []string) (result *vendora.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetByTags",
+			"errors", strings.Join(result.Errors, ","),
+			"result", result,
+			"tags", tags,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetByTags(ctx, tags)
+}
+
 func (l *loggerService) GetProduct(ctx *gin.Context, id uint) (result *vendora.BaseResult) {
 	defer func(begin time.Time) {
 		_ = l.logger.Log(

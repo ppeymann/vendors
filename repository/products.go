@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-
 	"github.com/ppeymann/vendors.git/models"
 	"gorm.io/gorm"
 )
@@ -11,6 +10,49 @@ type productsRepo struct {
 	pg       *gorm.DB
 	database string
 	table    string
+}
+
+func (r *productsRepo) Update(pr *models.ProductEntity) error {
+	return r.Model().Save(pr).Error
+}
+
+func (r *productsRepo) UpdateProduct(in *models.ProductInput, id, userID uint) (*models.ProductEntity, error) {
+	pr, err := r.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if pr.UserID != userID {
+		return nil, errors.New("permission denied")
+	}
+
+	pr.Title = in.Title
+	pr.Description = in.Description
+	pr.Stock = in.Stock
+	pr.Price = in.Price
+	pr.Tags = in.Tags
+	pr.SKU = in.SKU
+	pr.DiscountPrice = in.DiscountPrice
+	pr.Images = in.Images
+	pr.ShortDescription = in.ShortDescription
+	pr.CategoryID = in.CategoryID
+
+	err = r.Update(pr)
+	if err != nil {
+		return nil, err
+	}
+
+	return pr, nil
+}
+
+func (r *productsRepo) FindByTags(tag []string) ([]*models.ProductEntity, error) {
+	var products []*models.ProductEntity
+
+	if err := r.Model().Where("tag IN (?)", tag).Find(&products).Error; err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }
 
 func (r *productsRepo) FindByID(id uint) (*models.ProductEntity, error) {

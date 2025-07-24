@@ -12,6 +12,19 @@ type validationService struct {
 	next   models.ProductService
 }
 
+func (v *validationService) EditProduct(ctx *gin.Context, id uint, in *models.ProductInput) *vendora.BaseResult {
+	err := validations.Validate(in, v.schema)
+	if err != nil {
+		return err
+	}
+
+	return v.next.EditProduct(ctx, id, in)
+}
+
+func (v *validationService) GetByTags(ctx *gin.Context, tags []string) *vendora.BaseResult {
+	return v.next.GetByTags(ctx, tags)
+}
+
 func (v *validationService) GetProduct(ctx *gin.Context, id uint) *vendora.BaseResult {
 	return v.next.GetProduct(ctx, id)
 }

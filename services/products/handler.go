@@ -13,6 +13,45 @@ type handler struct {
 	next models.ProductService
 }
 
+// TODO: write swagger
+func (h *handler) EditProduct(ctx *gin.Context) {
+	in := &models.ProductInput{}
+
+	if err := ctx.ShouldBindJSON(in); err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredParam},
+		})
+
+		return
+	}
+
+	result := h.next.EditProduct(ctx, uint(id), in)
+	ctx.JSON(result.Status, result)
+}
+
+func (h *handler) GetByTags(ctx *gin.Context) {
+	in := &models.TagsInput{}
+	if err := ctx.ShouldBindJSON(in); err != nil {
+		ctx.JSON(http.StatusBadRequest, &vendora.BaseResult{
+			Errors: []string{vendora.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	result := h.next.GetByTags(ctx, in.Tags)
+	ctx.JSON(result.Status, result)
+}
+
 // GetProduct is handler for get product
 //
 // @BasePath			/api/v1/products
@@ -74,7 +113,8 @@ func NewHandler(srv models.ProductService, s *server.Server) models.ProductHandl
 
 	group := s.Router.Group("/api/v1/product")
 	{
-
+		group.GET("/:id", handler.GetProduct)
+		group.GET("/tags", handler.GetByTags)
 	}
 	group.Use(s.Authenticate(vendora.SellerRoles))
 	{
